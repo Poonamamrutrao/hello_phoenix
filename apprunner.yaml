@@ -1,1 +1,18 @@
-
+version: 1.0
+service:
+  name: HelloPhoenixAppRunner
+  sourceConfiguration:
+    imageRepository:
+      imageIdentifier: "<your_docker_image_uri>"
+      imageConfiguration:
+        port: "4000"
+      imageRepositoryType: ECR  # Ensure the image is in Amazon ECR
+    authenticationConfiguration:
+      connectionArn: "<your_ecr_connection_arn>"
+  instanceConfiguration:
+    cpu: 1024   # 1 vCPU
+    memory: 2048  # 2 GB RAM
+  autoScalingConfiguration:
+    maxConcurrency: 100  # Adjust based on load
+    minSize: 1
+    maxSize: 5
