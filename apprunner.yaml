@@ -1,4 +1,24 @@
-mix deps.get
-mix ecto.create && mix ecto.migrate
-npm install
-mix phoenix.server
+version: 1.0
+
+# This defines the runtime environment
+runtime:
+  name: nodejs  # Needed for assets
+  version: "16" # Adjust Node.js version based on your requirement
+  platform: linux
+
+services:
+  - name: hello_phoenix
+    source: .  # Application source is the current directory
+    build:
+      # Command to install Elixir, Node.js, and Phoenix dependencies
+      commands:
+        - mix deps.get  # Elixir dependencies
+        - mix ecto.create && mix ecto.migrate  # Setup the database if necessary
+        - npm install --prefix ./assets  # Node.js dependencies
+        - npm run deploy --prefix ./assets  # Build assets (optional, based on your Phoenix setup)
+        - mix phx.digest  # Optional: Digest static assets
+    run:
+      # Start command for Phoenix server in production mode
+      command: MIX_ENV=prod mix phx.server
+      network:
+        port: 4000
